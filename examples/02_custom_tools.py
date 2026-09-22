@@ -12,8 +12,8 @@ import json
 import urllib.error
 import urllib.request
 
-from agentforge import Agent, MockProvider
-from agentforge.tools import ToolRegistry, tool
+from weaveragent import Agent, MockProvider
+from weaveragent.tools import ToolRegistry, tool
 
 
 @tool(tags=("text",))

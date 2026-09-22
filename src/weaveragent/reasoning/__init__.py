@@ -4,7 +4,7 @@ from .base import ReasoningEngine, Step, StepType, Trace
 from .plan_execute import PlanExecuteEngine, PlanStep
 from .react import ReActEngine
 
-#: Names accepted by :class:`~agentforge.agent.Agent` and the CLI.
+#: Names accepted by :class:`~weaveragent.agent.Agent` and the CLI.
 ENGINES: dict[str, type[ReasoningEngine]] = {
     "react": ReActEngine,
     "plan_execute": PlanExecuteEngine,

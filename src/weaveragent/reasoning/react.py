@@ -29,7 +29,7 @@ class ReActEngine(ReasoningEngine):
     Tool calls go through the provider's native tool-calling interface rather
     than parsing ``Thought:``/``Action:`` text out of a completion. The
     Thought-Action-Observation structure is still what gets recorded in the
-    :class:`~agentforge.reasoning.base.Trace`, but the model never has to
+    :class:`~weaveragent.reasoning.base.Trace`, but the model never has to
     produce a fragile text format, and malformed actions stop being a failure
     mode.
     """

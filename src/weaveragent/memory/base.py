@@ -37,7 +37,7 @@ class MemoryStore(ABC):
     """Storage for an agent's conversation history and durable facts.
 
     Implementations must be safe to use across agent runs;
-    :class:`~agentforge.memory.sqlite.SQLiteMemory` additionally survives
+    :class:`~weaveragent.memory.sqlite.SQLiteMemory` additionally survives
     process restarts.
     """
 

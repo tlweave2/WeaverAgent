@@ -8,8 +8,8 @@ is purely the reasoning strategy.
 
 from __future__ import annotations
 
-from agentforge import MockProvider, PlanExecuteEngine, ReActEngine
-from agentforge.tools import default_registry
+from weaveragent import MockProvider, PlanExecuteEngine, ReActEngine
+from weaveragent.tools import default_registry
 
 TASK = "Compute 17 * 23, then tell me the current time."
 

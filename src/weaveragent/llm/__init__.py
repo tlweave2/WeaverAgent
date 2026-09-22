@@ -21,7 +21,7 @@ __all__ = [
 def __getattr__(name: str):  # pragma: no cover - thin lazy-import shim
     """Expose the SDK-backed providers lazily.
 
-    Importing them eagerly would make ``agentforge.llm`` fail to import
+    Importing them eagerly would make ``weaveragent.llm`` fail to import
     whenever an optional SDK is absent.
     """
     if name == "AnthropicProvider":

@@ -49,7 +49,7 @@ _NO_SAMPLING_PREFIXES = (
 class AnthropicProvider(LLMProvider):
     """Claude models via the official ``anthropic`` SDK.
 
-    Install with ``pip install 'agentforge[anthropic]'``. Credentials are
+    Install with ``pip install 'weaveragent[anthropic]'``. Credentials are
     resolved by the SDK from ``ANTHROPIC_API_KEY``, ``ANTHROPIC_AUTH_TOKEN``,
     or an ``ant auth login`` profile, so no key needs to be passed here.
 
@@ -81,7 +81,7 @@ class AnthropicProvider(LLMProvider):
         except ImportError as exc:  # pragma: no cover - depends on the environment
             raise ProviderNotInstalled(
                 "the anthropic SDK is required for AnthropicProvider; "
-                "install it with: pip install 'agentforge[anthropic]'"
+                "install it with: pip install 'weaveragent[anthropic]'"
             ) from exc
         if api_key is not None:
             client_kwargs["api_key"] = api_key

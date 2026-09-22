@@ -63,7 +63,7 @@ class PlanStep:
 class PlanExecuteEngine(ReasoningEngine):
     """Plan the whole task up front, then execute each step in turn.
 
-    Compared with :class:`~agentforge.reasoning.react.ReActEngine`, this trades
+    Compared with :class:`~weaveragent.reasoning.react.ReActEngine`, this trades
     adaptivity for structure: the model commits to an approach before spending
     tool calls, which suits multi-part tasks where a greedy loop tends to wander.
     Each step is executed by its own bounded ReAct sub-run, so steps can still

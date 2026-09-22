@@ -1,4 +1,4 @@
-# AgentForge
+# WeaverAgent
 
 Universal AI agent framework featuring a unified LLM interface layer, ReAct and
 Plan-Execute reasoning engines, a pluggable tool registry, and persistent memory
@@ -11,8 +11,8 @@ The four layers are independent. Any provider works with any reasoning engine,
 any tool set, and any memory backend — swapping one changes no other code.
 
 ```python
-from agentforge import Agent
-from agentforge.tools import default_registry
+from weaveragent import Agent
+from weaveragent.tools import default_registry
 
 agent = Agent(provider="anthropic", tools=default_registry())
 print(agent.ask("What is 17 * 23?"))
@@ -37,7 +37,7 @@ an `ant auth login` profile); nothing needs to be passed in code.
 The built-in `mock` provider runs the whole stack in-process:
 
 ```bash
-python -m agentforge.cli run "hello" --provider mock --trace
+python -m weaveragent.cli run "hello" --provider mock --trace
 python examples/03_engines_compared.py
 pytest                             # 143 tests, no network, no key
 ```
@@ -50,7 +50,7 @@ Every provider implements one interface and speaks one set of types, so nothing
 above this layer touches a vendor SDK.
 
 ```python
-from agentforge.llm import get_provider, LLMConfig
+from weaveragent.llm import get_provider, LLMConfig
 
 claude = get_provider("anthropic", model="claude-opus-5")
 gpt    = get_provider("openai", model="gpt-4o")
@@ -99,7 +99,7 @@ which suits multi-part tasks where a greedy loop wanders. Re-plans the remaining
 steps when one fails.
 
 ```python
-from agentforge import Agent
+from weaveragent import Agent
 
 Agent(provider, engine="react", tools=registry, max_steps=10)
 Agent(provider, engine="plan_execute", tools=registry, max_steps=6)
@@ -137,7 +137,7 @@ Schemas are derived from type hints and the docstring, so what the model sees
 cannot drift away from the implementation.
 
 ```python
-from agentforge.tools import ToolRegistry, tool
+from weaveragent.tools import ToolRegistry, tool
 
 @tool(tags=("search",))
 def search(query: str, limit: int = 10) -> str:
@@ -181,7 +181,7 @@ to an explicit root directory, read-only unless `writable=True`.
 ### 4. Persistent memory
 
 ```python
-from agentforge.memory import EphemeralMemory, SQLiteMemory
+from weaveragent.memory import EphemeralMemory, SQLiteMemory
 
 Agent(provider, memory=SQLiteMemory("memory.sqlite3"), session_id="alice")
 ```
@@ -205,15 +205,15 @@ plug in a vector store or Redis.
 ## CLI
 
 ```bash
-agentforge run "What is 17 * 23?" --trace     # run one task
-agentforge chat --memory ~/.agentforge.db     # interactive, persistent
-agentforge tools --json                       # inspect generated schemas
-agentforge providers                          # list providers
+weaveragent run "What is 17 * 23?" --trace     # run one task
+weaveragent chat --memory ~/.weaveragent.db     # interactive, persistent
+weaveragent tools --json                       # inspect generated schemas
+weaveragent providers                          # list providers
 ```
 
-Configurable by environment: `AGENTFORGE_PROVIDER`, `AGENTFORGE_MODEL`,
-`AGENTFORGE_ENGINE`, `AGENTFORGE_MAX_STEPS`, `AGENTFORGE_MAX_TOKENS`,
-`AGENTFORGE_SESSION`, `AGENTFORGE_MEMORY_PATH`, `AGENTFORGE_HISTORY_LIMIT`.
+Configurable by environment: `WEAVERAGENT_PROVIDER`, `WEAVERAGENT_MODEL`,
+`WEAVERAGENT_ENGINE`, `WEAVERAGENT_MAX_STEPS`, `WEAVERAGENT_MAX_TOKENS`,
+`WEAVERAGENT_SESSION`, `WEAVERAGENT_MEMORY_PATH`, `WEAVERAGENT_HISTORY_LIMIT`.
 Explicit flags and code always win over the environment.
 
 ## Architecture
@@ -238,12 +238,12 @@ Explicit flags and code always win over the environment.
 ```
 
 Everything crossing a layer boundary is a plain dataclass from
-`agentforge.types` — `Message`, `ToolCall`, `ToolResult`, `LLMResponse`,
+`weaveragent.types` — `Message`, `ToolCall`, `ToolResult`, `LLMResponse`,
 `Usage`, `StopReason`. No vendor type reaches the reasoning, tool, or memory
 layers, which is what makes them portable.
 
 ```
-src/agentforge/
+src/weaveragent/
 ├── agent.py          Agent facade
 ├── config.py         environment-driven Settings
 ├── types.py          provider-neutral dataclasses

@@ -1,17 +1,17 @@
-"""Exception hierarchy for AgentForge."""
+"""Exception hierarchy for WeaverAgent."""
 
 from __future__ import annotations
 
 
-class AgentForgeError(Exception):
-    """Base class for every error raised by AgentForge."""
+class WeaverAgentError(Exception):
+    """Base class for every error raised by WeaverAgent."""
 
 
-class ConfigurationError(AgentForgeError):
+class ConfigurationError(WeaverAgentError):
     """Raised when a provider, engine, or tool is misconfigured."""
 
 
-class ProviderError(AgentForgeError):
+class ProviderError(WeaverAgentError):
     """Raised when an LLM provider fails or is unavailable."""
 
 
@@ -19,7 +19,7 @@ class ProviderNotInstalled(ProviderError):
     """Raised when a provider's optional SDK dependency is missing."""
 
 
-class ToolError(AgentForgeError):
+class ToolError(WeaverAgentError):
     """Raised when a tool cannot be invoked.
 
     Errors *inside* a tool body are captured into a failed ``ToolResult``
@@ -31,11 +31,11 @@ class ToolNotFound(ToolError):
     """Raised when the model calls a tool that is not in the registry."""
 
 
-class MemoryError_(AgentForgeError):
+class MemoryError_(WeaverAgentError):
     """Raised when a memory backend fails."""
 
 
-class ReasoningError(AgentForgeError):
+class ReasoningError(WeaverAgentError):
     """Raised when a reasoning engine cannot complete a run."""
 
 

@@ -2,8 +2,8 @@
 
 import pytest
 
-from agentforge.memory import EphemeralMemory, MemoryRecord, SQLiteMemory
-from agentforge.types import Message, ToolCall, ToolResult
+from weaveragent.memory import EphemeralMemory, MemoryRecord, SQLiteMemory
+from weaveragent.types import Message, ToolCall, ToolResult
 
 
 @pytest.fixture(params=["ephemeral", "sqlite"])

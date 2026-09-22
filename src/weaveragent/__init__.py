@@ -1,16 +1,16 @@
-"""AgentForge -- a universal AI agent framework.
+"""WeaverAgent -- a universal AI agent framework.
 
 Four independent layers:
 
-* :mod:`agentforge.llm` -- a unified interface over model providers.
-* :mod:`agentforge.reasoning` -- ReAct and Plan-and-Execute engines.
-* :mod:`agentforge.tools` -- a pluggable tool registry.
-* :mod:`agentforge.memory` -- ephemeral and persistent memory stores.
+* :mod:`weaveragent.llm` -- a unified interface over model providers.
+* :mod:`weaveragent.reasoning` -- ReAct and Plan-and-Execute engines.
+* :mod:`weaveragent.tools` -- a pluggable tool registry.
+* :mod:`weaveragent.memory` -- ephemeral and persistent memory stores.
 
-:class:`~agentforge.agent.Agent` composes them::
+:class:`~weaveragent.agent.Agent` composes them::
 
-    from agentforge import Agent
-    from agentforge.tools import default_registry
+    from weaveragent import Agent
+    from weaveragent.tools import default_registry
 
     agent = Agent(provider="anthropic", tools=default_registry())
     print(agent.ask("What is 17 * 23?"))
@@ -18,7 +18,6 @@ Four independent layers:
 
 from .agent import Agent
 from .errors import (
-    AgentForgeError,
     ConfigurationError,
     ProviderError,
     ProviderNotInstalled,
@@ -26,6 +25,7 @@ from .errors import (
     StepLimitExceeded,
     ToolError,
     ToolNotFound,
+    WeaverAgentError,
 )
 from .llm import LLMConfig, LLMProvider, MockProvider, get_provider
 from .memory import EphemeralMemory, MemoryRecord, MemoryStore, SQLiteMemory
@@ -45,9 +45,10 @@ __version__ = "0.1.0"
 
 __all__ = [
     "Agent",
-    "AgentForgeError",
     "ConfigurationError",
+    "default_registry",
     "EphemeralMemory",
+    "get_provider",
     "LLMConfig",
     "LLMProvider",
     "LLMResponse",
@@ -68,6 +69,7 @@ __all__ = [
     "StepType",
     "StopReason",
     "Tool",
+    "tool",
     "ToolCall",
     "ToolError",
     "ToolNotFound",
@@ -76,7 +78,5 @@ __all__ = [
     "Trace",
     "Usage",
     "__version__",
-    "default_registry",
-    "get_provider",
-    "tool",
+    "WeaverAgentError",
 ]

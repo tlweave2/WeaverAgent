@@ -2,7 +2,7 @@
 
 Run against Claude:
 
-    pip install 'agentforge[anthropic]'
+    pip install 'weaveragent[anthropic]'
     export ANTHROPIC_API_KEY=...
     python examples/01_quickstart.py
 
@@ -15,8 +15,8 @@ from __future__ import annotations
 
 import sys
 
-from agentforge import Agent, MockProvider, SQLiteMemory
-from agentforge.tools import default_registry
+from weaveragent import Agent, MockProvider, SQLiteMemory
+from weaveragent.tools import default_registry
 
 
 def main() -> None:

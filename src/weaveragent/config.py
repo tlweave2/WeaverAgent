@@ -25,9 +25,9 @@ def _env_int(name: str, default: int) -> int:
 
 @dataclass(slots=True)
 class Settings:
-    """Resolved defaults for building an :class:`~agentforge.agent.Agent`.
+    """Resolved defaults for building an :class:`~weaveragent.agent.Agent`.
 
-    Every field maps to an ``AGENTFORGE_*`` environment variable, read by
+    Every field maps to a ``WEAVERAGENT_*`` environment variable, read by
     :meth:`from_env`.
     """
 
@@ -45,23 +45,23 @@ class Settings:
     def from_env(cls, **overrides: Any) -> Settings:
         """Read settings from the environment.
 
-        Recognized variables: ``AGENTFORGE_PROVIDER``, ``AGENTFORGE_MODEL``,
-        ``AGENTFORGE_ENGINE``, ``AGENTFORGE_MAX_STEPS``,
-        ``AGENTFORGE_MAX_TOKENS``, ``AGENTFORGE_SESSION``,
-        ``AGENTFORGE_MEMORY_PATH``, ``AGENTFORGE_HISTORY_LIMIT``.
+        Recognized variables: ``WEAVERAGENT_PROVIDER``, ``WEAVERAGENT_MODEL``,
+        ``WEAVERAGENT_ENGINE``, ``WEAVERAGENT_MAX_STEPS``,
+        ``WEAVERAGENT_MAX_TOKENS``, ``WEAVERAGENT_SESSION``,
+        ``WEAVERAGENT_MEMORY_PATH``, ``WEAVERAGENT_HISTORY_LIMIT``.
 
         Keyword arguments win over the environment, so explicit CLI flags and
         application code stay authoritative.
         """
         settings = cls(
-            provider=os.environ.get("AGENTFORGE_PROVIDER", "anthropic"),
-            model=os.environ.get("AGENTFORGE_MODEL") or None,
-            engine=os.environ.get("AGENTFORGE_ENGINE", "react"),
-            max_steps=_env_int("AGENTFORGE_MAX_STEPS", 10),
-            max_tokens=_env_int("AGENTFORGE_MAX_TOKENS", 16_000),
-            session_id=os.environ.get("AGENTFORGE_SESSION", "default"),
-            memory_path=os.environ.get("AGENTFORGE_MEMORY_PATH") or None,
-            history_limit=_env_int("AGENTFORGE_HISTORY_LIMIT", 20),
+            provider=os.environ.get("WEAVERAGENT_PROVIDER", "anthropic"),
+            model=os.environ.get("WEAVERAGENT_MODEL") or None,
+            engine=os.environ.get("WEAVERAGENT_ENGINE", "react"),
+            max_steps=_env_int("WEAVERAGENT_MAX_STEPS", 10),
+            max_tokens=_env_int("WEAVERAGENT_MAX_TOKENS", 16_000),
+            session_id=os.environ.get("WEAVERAGENT_SESSION", "default"),
+            memory_path=os.environ.get("WEAVERAGENT_MEMORY_PATH") or None,
+            history_limit=_env_int("WEAVERAGENT_HISTORY_LIMIT", 20),
         )
         for key, value in overrides.items():
             if value is not None and hasattr(settings, key):
@@ -85,7 +85,7 @@ class Settings:
         return EphemeralMemory()
 
     def build_agent(self, **kwargs: Any):
-        """Construct an :class:`~agentforge.agent.Agent` from these settings."""
+        """Construct an :class:`~weaveragent.agent.Agent` from these settings."""
         from .agent import Agent
 
         options: dict[str, Any] = {

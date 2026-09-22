@@ -30,9 +30,9 @@ class LLMConfig:
 class LLMProvider(ABC):
     """A normalized interface over one model vendor.
 
-    Implementations translate :class:`~agentforge.types.Message` and
+    Implementations translate :class:`~weaveragent.types.Message` and
     provider-neutral tool schemas onto their wire format, and translate
-    responses back into :class:`~agentforge.types.LLMResponse`. Engines depend
+    responses back into :class:`~weaveragent.types.LLMResponse`. Engines depend
     only on this contract.
     """
 

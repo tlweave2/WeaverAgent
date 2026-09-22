@@ -1,4 +1,4 @@
-"""Command line interface: ``agentforge``."""
+"""Command line interface: ``weaveragent``."""
 
 from __future__ import annotations
 
@@ -8,17 +8,17 @@ from collections.abc import Sequence
 
 from . import __version__
 from .config import Settings
-from .errors import AgentForgeError
+from .errors import WeaverAgentError
 from .llm.registry import available_providers
 from .reasoning import ENGINES
 
 
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
-        prog="agentforge",
-        description="Run an AgentForge agent from the command line.",
+        prog="weaveragent",
+        description="Run a WeaverAgent agent from the command line.",
     )
-    parser.add_argument("--version", action="version", version=f"agentforge {__version__}")
+    parser.add_argument("--version", action="version", version=f"weaveragent {__version__}")
 
     subparsers = parser.add_subparsers(dest="command", required=True)
 
@@ -77,7 +77,7 @@ def _build_tools(spec: str, file_root: str | None = None):
         wanted = [name.strip() for name in spec.split(",") if name.strip()]
         registry = default_registry().subset(wanted)
         if not len(registry):
-            raise AgentForgeError(
+            raise WeaverAgentError(
                 f"no builtin tools matched {spec!r}; "
                 f"available: {', '.join(default_registry().names())}"
             )
@@ -127,7 +127,7 @@ def _cmd_chat(args: argparse.Namespace) -> int:
                 continue
             try:
                 print(f"\nagent> {agent.ask(line)}\n")
-            except AgentForgeError as exc:
+            except WeaverAgentError as exc:
                 print(f"\nerror: {exc}\n", file=sys.stderr)
 
 
@@ -159,7 +159,7 @@ def main(argv: Sequence[str] | None = None) -> int:
     }
     try:
         return handlers[args.command](args)
-    except AgentForgeError as exc:
+    except WeaverAgentError as exc:
         print(f"error: {exc}", file=sys.stderr)
         return 2
     except KeyboardInterrupt:

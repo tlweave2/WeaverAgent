@@ -26,7 +26,7 @@ _FINISH_REASONS = {
 class OpenAIProvider(LLMProvider):
     """Chat Completions models via the official ``openai`` SDK.
 
-    Install with ``pip install 'agentforge[openai]'``. The SDK reads
+    Install with ``pip install 'weaveragent[openai]'``. The SDK reads
     ``OPENAI_API_KEY`` from the environment.
     """
 
@@ -52,7 +52,7 @@ class OpenAIProvider(LLMProvider):
         except ImportError as exc:  # pragma: no cover - depends on the environment
             raise ProviderNotInstalled(
                 "the openai SDK is required for OpenAIProvider; "
-                "install it with: pip install 'agentforge[openai]'"
+                "install it with: pip install 'weaveragent[openai]'"
             ) from exc
         if api_key is not None:
             client_kwargs["api_key"] = api_key

@@ -30,13 +30,13 @@ class Agent:
 
     Args:
         provider: A provider instance, or a name for
-            :func:`~agentforge.llm.registry.get_provider`.
+            :func:`~weaveragent.llm.registry.get_provider`.
         engine: ``"react"``, ``"plan_execute"``, an engine class, or an engine
             instance.
-        tools: Tools to expose. A list of :class:`~agentforge.tools.base.Tool`
+        tools: Tools to expose. A list of :class:`~weaveragent.tools.base.Tool`
             is accepted and wrapped in a registry.
         memory: Memory backend. Defaults to
-            :class:`~agentforge.memory.ephemeral.EphemeralMemory`.
+            :class:`~weaveragent.memory.ephemeral.EphemeralMemory`.
         model: Model id, when ``provider`` is given as a name.
         session_id: Memory session this agent reads and writes.
         system_prompt: Overrides the engine's default system prompt.

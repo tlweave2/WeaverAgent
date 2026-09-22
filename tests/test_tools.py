@@ -4,9 +4,9 @@ import json
 
 import pytest
 
-from agentforge.errors import ToolNotFound
-from agentforge.tools import ToolRegistry, default_registry, make_file_tools, tool
-from agentforge.types import ToolCall
+from weaveragent.errors import ToolNotFound
+from weaveragent.tools import ToolRegistry, default_registry, make_file_tools, tool
+from weaveragent.types import ToolCall
 
 
 def test_schema_inferred_from_signature_and_docstring():

@@ -18,7 +18,7 @@ class MockProvider(LLMProvider):
     This is what makes the reasoning engines testable without a network call
     or an API key. Each entry of ``script`` may be:
 
-    * an :class:`~agentforge.types.LLMResponse` -- returned as-is;
+    * an :class:`~weaveragent.types.LLMResponse` -- returned as-is;
     * a ``str`` -- returned as a final text answer;
     * a callable taking the message history and returning a response, for
       behavior that depends on what the agent has done so far.
@@ -76,7 +76,7 @@ class MockProvider(LLMProvider):
         )
 
         if not self.script:
-            # No script at all: echo, so `agentforge run -p mock` and other
+            # No script at all: echo, so `weaveragent run -p mock` and other
             # smoke tests work without an API key. An *exhausted* script is a
             # different matter -- see below.
             return self._echo(history)

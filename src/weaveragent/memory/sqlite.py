@@ -37,14 +37,14 @@ class SQLiteMemory(MemoryStore):
     """Durable memory in a single SQLite file.
 
     Survives process restarts, which is what separates it from
-    :class:`~agentforge.memory.ephemeral.EphemeralMemory`. Pass
+    :class:`~weaveragent.memory.ephemeral.EphemeralMemory`. Pass
     ``path=":memory:"`` for a throwaway database with the same semantics.
 
     Args:
         path: Database file. Parent directories are created as needed.
     """
 
-    def __init__(self, path: str | Path = "agentforge_memory.sqlite3") -> None:
+    def __init__(self, path: str | Path = "weaveragent_memory.sqlite3") -> None:
         self.path = str(path)
         if self.path != ":memory:":
             Path(self.path).expanduser().parent.mkdir(parents=True, exist_ok=True)

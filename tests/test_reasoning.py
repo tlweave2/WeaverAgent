@@ -2,10 +2,10 @@
 
 import pytest
 
-from agentforge.llm import MockProvider
-from agentforge.reasoning import PlanExecuteEngine, ReActEngine, StepType
-from agentforge.tools import ToolRegistry, default_registry
-from agentforge.types import LLMResponse, StopReason
+from weaveragent.llm import MockProvider
+from weaveragent.reasoning import PlanExecuteEngine, ReActEngine, StepType
+from weaveragent.tools import ToolRegistry, default_registry
+from weaveragent.types import LLMResponse, StopReason
 
 
 @pytest.fixture
@@ -143,7 +143,7 @@ def test_custom_system_prompt_replaces_the_default(tools):
 
 
 def test_react_conditions_on_history(tools):
-    from agentforge.types import Message
+    from weaveragent.types import Message
 
     provider = MockProvider(["done"])
     history = [Message.user("earlier"), Message.assistant("noted")]
@@ -154,7 +154,7 @@ def test_react_conditions_on_history(tools):
 
 
 def test_trace_accumulates_usage(tools):
-    from agentforge.types import Usage
+    from weaveragent.types import Usage
 
     provider = MockProvider(
         [
@@ -300,6 +300,6 @@ def test_executor_prompt_carries_earlier_step_results(tools):
 )
 def test_plan_parsing_tolerates_planner_formatting_drift(text, expected):
     """Planners drift in and out of strict JSON; a formatting slip must not abort a run."""
-    from agentforge.reasoning.plan_execute import _parse_plan
+    from weaveragent.reasoning.plan_execute import _parse_plan
 
     assert _parse_plan(text) == expected

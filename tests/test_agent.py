@@ -4,11 +4,11 @@ import sqlite3
 
 import pytest
 
-from agentforge import Agent, MockProvider, SQLiteMemory
-from agentforge.config import Settings
-from agentforge.errors import ConfigurationError
-from agentforge.reasoning import PlanExecuteEngine, ReActEngine
-from agentforge.tools import ToolRegistry, default_registry, tool
+from weaveragent import Agent, MockProvider, SQLiteMemory
+from weaveragent.config import Settings
+from weaveragent.errors import ConfigurationError
+from weaveragent.reasoning import PlanExecuteEngine, ReActEngine
+from weaveragent.tools import ToolRegistry, default_registry, tool
 
 
 def test_agent_composes_the_four_layers():
@@ -170,10 +170,10 @@ def test_agent_context_manager_closes_memory():
 
 
 def test_settings_read_from_the_environment(monkeypatch):
-    monkeypatch.setenv("AGENTFORGE_PROVIDER", "mock")
-    monkeypatch.setenv("AGENTFORGE_ENGINE", "plan_execute")
-    monkeypatch.setenv("AGENTFORGE_MAX_STEPS", "3")
-    monkeypatch.setenv("AGENTFORGE_SESSION", "from-env")
+    monkeypatch.setenv("WEAVERAGENT_PROVIDER", "mock")
+    monkeypatch.setenv("WEAVERAGENT_ENGINE", "plan_execute")
+    monkeypatch.setenv("WEAVERAGENT_MAX_STEPS", "3")
+    monkeypatch.setenv("WEAVERAGENT_SESSION", "from-env")
 
     settings = Settings.from_env()
     assert settings.provider == "mock"
@@ -183,20 +183,20 @@ def test_settings_read_from_the_environment(monkeypatch):
 
 
 def test_explicit_overrides_beat_the_environment(monkeypatch):
-    monkeypatch.setenv("AGENTFORGE_PROVIDER", "mock")
+    monkeypatch.setenv("WEAVERAGENT_PROVIDER", "mock")
     assert Settings.from_env(provider="openai").provider == "openai"
     # None means "not specified", so the environment still wins.
     assert Settings.from_env(provider=None).provider == "mock"
 
 
 def test_malformed_numeric_env_var_falls_back(monkeypatch):
-    monkeypatch.setenv("AGENTFORGE_MAX_STEPS", "not-a-number")
+    monkeypatch.setenv("WEAVERAGENT_MAX_STEPS", "not-a-number")
     assert Settings.from_env().max_steps == 10
 
 
 def test_settings_build_an_agent(monkeypatch, tmp_path):
-    monkeypatch.setenv("AGENTFORGE_PROVIDER", "mock")
-    monkeypatch.setenv("AGENTFORGE_MEMORY_PATH", str(tmp_path / "m.sqlite3"))
+    monkeypatch.setenv("WEAVERAGENT_PROVIDER", "mock")
+    monkeypatch.setenv("WEAVERAGENT_MEMORY_PATH", str(tmp_path / "m.sqlite3"))
 
     with Settings.from_env().build_agent() as agent:
         assert isinstance(agent.memory, SQLiteMemory)
@@ -204,7 +204,7 @@ def test_settings_build_an_agent(monkeypatch, tmp_path):
 
 
 def test_settings_without_a_path_use_ephemeral_memory():
-    from agentforge.memory import EphemeralMemory
+    from weaveragent.memory import EphemeralMemory
 
     assert isinstance(Settings().build_memory(), EphemeralMemory)
 
@@ -213,7 +213,7 @@ def test_settings_without_a_path_use_ephemeral_memory():
 
 
 def test_cli_lists_tools(capsys):
-    from agentforge.cli import main
+    from weaveragent.cli import main
 
     assert main(["tools"]) == 0
     assert "calculator" in capsys.readouterr().out
@@ -222,7 +222,7 @@ def test_cli_lists_tools(capsys):
 def test_cli_lists_tool_schemas_as_json(capsys):
     import json
 
-    from agentforge.cli import main
+    from weaveragent.cli import main
 
     assert main(["tools", "--json"]) == 0
     schemas = json.loads(capsys.readouterr().out)
@@ -230,14 +230,14 @@ def test_cli_lists_tool_schemas_as_json(capsys):
 
 
 def test_cli_lists_providers(capsys):
-    from agentforge.cli import main
+    from weaveragent.cli import main
 
     assert main(["providers"]) == 0
     assert "anthropic" in capsys.readouterr().out
 
 
 def test_cli_tool_spec_selects_a_subset():
-    from agentforge.cli import _build_tools
+    from weaveragent.cli import _build_tools
 
     assert _build_tools("none").names() == []
     assert _build_tools("calculator").names() == ["calculator"]
@@ -245,15 +245,15 @@ def test_cli_tool_spec_selects_a_subset():
 
 
 def test_cli_tool_spec_rejects_an_unmatched_name():
-    from agentforge.cli import _build_tools
-    from agentforge.errors import AgentForgeError
+    from weaveragent.cli import _build_tools
+    from weaveragent.errors import WeaverAgentError
 
-    with pytest.raises(AgentForgeError, match="no builtin tools matched"):
+    with pytest.raises(WeaverAgentError, match="no builtin tools matched"):
         _build_tools("nonexistent")
 
 
 def test_cli_file_root_adds_file_tools(tmp_path):
-    from agentforge.cli import _build_tools
+    from weaveragent.cli import _build_tools
 
     registry = _build_tools("none", str(tmp_path))
     assert registry.names() == ["list_files", "read_file"]
@@ -261,14 +261,14 @@ def test_cli_file_root_adds_file_tools(tmp_path):
 
 def test_cli_run_prints_the_answer(capsys):
     """`run` works against the mock provider with no API key."""
-    from agentforge.cli import main
+    from weaveragent.cli import main
 
     assert main(["run", "what", "is", "up", "--provider", "mock", "--tools", "none"]) == 0
     assert capsys.readouterr().out.strip() == "[mock] what is up"
 
 
 def test_cli_run_can_print_the_full_trace(capsys):
-    from agentforge.cli import main
+    from weaveragent.cli import main
 
     assert main(["run", "hello", "--provider", "mock", "--trace"]) == 0
     out = capsys.readouterr().out
@@ -277,15 +277,15 @@ def test_cli_run_can_print_the_full_trace(capsys):
 
 
 def test_cli_run_honors_the_engine_flag(capsys):
-    from agentforge.cli import main
+    from weaveragent.cli import main
 
     main(["run", "hello", "--provider", "mock", "--engine", "plan_execute", "--trace"])
     assert "Engine: plan_execute" in capsys.readouterr().out
 
 
 def test_cli_run_persists_memory_to_disk(tmp_path, capsys):
-    from agentforge.cli import main
-    from agentforge.memory import SQLiteMemory
+    from weaveragent.cli import main
+    from weaveragent.memory import SQLiteMemory
 
     path = tmp_path / "cli.sqlite3"
     main(["run", "remember this", "--provider", "mock", "--memory", str(path), "--session", "s"])

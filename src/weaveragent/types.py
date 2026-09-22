@@ -1,6 +1,6 @@
 """Provider-neutral data types.
 
-Every layer of AgentForge speaks these types, never a vendor SDK's types.
+Every layer of WeaverAgent speaks these types, never a vendor SDK's types.
 That is what makes the reasoning engines, tools, and memory stores portable
 across providers: an engine that consumes :class:`LLMResponse` works
 identically against Claude, GPT, or the in-process mock provider.

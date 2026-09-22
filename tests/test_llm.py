@@ -5,16 +5,16 @@ from types import SimpleNamespace
 
 import pytest
 
-from agentforge.errors import ConfigurationError, ProviderError
-from agentforge.llm import LLMConfig, MockProvider, available_providers, get_provider
-from agentforge.llm.anthropic_provider import (
+from weaveragent.errors import ConfigurationError, ProviderError
+from weaveragent.llm import LLMConfig, MockProvider, available_providers, get_provider
+from weaveragent.llm.anthropic_provider import (
     AnthropicProvider,
     _from_anthropic_message,
     _to_anthropic_messages,
 )
-from agentforge.llm.openai_provider import OpenAIProvider, _from_openai_completion
-from agentforge.llm.registry import register_provider
-from agentforge.types import Message, StopReason, ToolCall, ToolResult, Usage
+from weaveragent.llm.openai_provider import OpenAIProvider, _from_openai_completion
+from weaveragent.llm.registry import register_provider
+from weaveragent.types import Message, StopReason, ToolCall, ToolResult, Usage
 
 # -- registry ---------------------------------------------------------------
 
@@ -78,7 +78,7 @@ def test_per_call_config_overlays_provider_config():
 
 def test_base_stream_falls_back_to_complete():
     """A provider with no native streaming still supports stream()."""
-    from agentforge.llm.base import LLMProvider
+    from weaveragent.llm.base import LLMProvider
 
     provider = MockProvider(["text"])
     # Invoke the base implementation directly, bypassing MockProvider's override.
@@ -246,7 +246,7 @@ def test_openai_request_shape_and_tool_envelope():
 
 
 def test_openai_tool_results_become_individual_tool_messages():
-    from agentforge.llm.openai_provider import _to_openai_messages
+    from weaveragent.llm.openai_provider import _to_openai_messages
 
     wire = _to_openai_messages(
         [

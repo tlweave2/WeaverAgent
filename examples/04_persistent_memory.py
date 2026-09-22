@@ -11,7 +11,7 @@ from __future__ import annotations
 import tempfile
 from pathlib import Path
 
-from agentforge import Agent, MockProvider, SQLiteMemory
+from weaveragent import Agent, MockProvider, SQLiteMemory
 
 
 def main() -> None:

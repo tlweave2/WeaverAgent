@@ -103,7 +103,7 @@ class Trace:
 class ReasoningEngine(ABC):
     """A strategy for turning a task into an answer using an LLM and tools.
 
-    Engines are interchangeable: an :class:`~agentforge.agent.Agent` holds one
+    Engines are interchangeable: an :class:`~weaveragent.agent.Agent` holds one
     and delegates to it, so swapping ReAct for Plan-Execute changes no other
     code.
 
