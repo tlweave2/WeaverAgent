@@ -1,0 +1,109 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    # Installs only the dev extra, never the provider SDKs. The core is meant
+    # to have no required dependencies, and running the suite bare is what
+    # keeps an accidental top-level `import anthropic` from slipping in.
+    name: test (py${{ matrix.python-version }}, no provider SDKs)
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.10", "3.11", "3.12", "3.13"]
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: pip
+          cache-dependency-path: pyproject.toml
+
+      - name: Install (no extras)
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e '.[dev]'
+
+      - name: Confirm the provider SDKs really are absent
+        run: |
+          python - <<'PY'
+          import importlib.util as u
+          present = [m for m in ("anthropic", "openai") if u.find_spec(m)]
+          assert not present, f"expected no provider SDKs, found: {present}"
+          print("core is dependency-free as claimed")
+          PY
+
+      - name: Tests
+        run: pytest -q
+
+      - name: Examples run offline
+        run: |
+          for f in examples/*.py; do
+            echo "--- $f"
+            python "$f" --mock > /dev/null
+          done
+
+      - name: CLI works without an API key
+        run: |
+          test "$(weaveragent run hello --provider mock --tools none)" = "[mock] hello"
+          weaveragent tools > /dev/null
+          weaveragent providers > /dev/null
+
+  providers:
+    # The adapters hand-build request payloads, so this job pins them against
+    # the real SDKs: tests/test_sdk_contract.py fails if a field is renamed or
+    # dropped, instead of that surfacing as a 400 at runtime.
+    name: provider SDK contract
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: pyproject.toml
+
+      - name: Install with provider extras
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e '.[all,dev]'
+
+      - name: Full suite, including SDK contract tests
+        run: pytest -q
+
+  lint:
+    name: lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: pyproject.toml
+
+      - name: Install ruff
+        run: pip install ruff
+
+      - name: ruff check
+        run: ruff check --output-format=github .
+
+      - name: ruff format
+        run: ruff format --check .

@@ -4,6 +4,7 @@ Universal AI agent framework featuring a unified LLM interface layer, ReAct and
 Plan-Execute reasoning engines, a pluggable tool registry, and persistent memory
 management.
 
+[![CI](https://github.com/tlweave2/WeaverAgent/actions/workflows/ci.yml/badge.svg)](https://github.com/tlweave2/WeaverAgent/actions/workflows/ci.yml)
 [![Python](https://img.shields.io/badge/python-3.10%2B-blue)](https://www.python.org/)
 [![License: MIT](https://img.shields.io/badge/license-MIT-green)](LICENSE)
 
@@ -267,15 +268,33 @@ src/weaveragent/
 ## Development
 
 ```bash
-pip install -e '.[all,dev]'
-pytest                    # 143 tests: no network, no API key
+pip install -e '.[dev]'         # core only — 143 tests, 1 skipped
+pip install -e '.[all,dev]'     # plus provider SDKs — 149 tests
+pytest
 ruff check . && ruff format --check .
 ```
 
 Tests run against the mock provider, so the reasoning engines are exercised
 deterministically — including refusals, tool failures, step-limit truncation,
 re-planning, and planner output that isn't valid JSON. Both memory backends run
-against a shared suite so they can't drift apart.
+against a shared suite so they can't drift apart. No test needs a network or an
+API key.
+
+### CI
+
+[`ci.yml`](.github/workflows/ci.yml) runs three jobs on every push and PR:
+
+- **test** — the suite on Python 3.10, 3.11, 3.12 and 3.13, installed *without*
+  the provider SDKs, and asserting they are genuinely absent. That is what keeps
+  the "no required dependencies" claim honest: a stray top-level
+  `import anthropic` would fail the matrix. It also runs all four examples and
+  the CLI, proving both work with no API key.
+- **providers** — installs the extras and runs
+  [`tests/test_sdk_contract.py`](tests/test_sdk_contract.py), which checks every
+  field the adapters send against the SDKs' own parameter types. The adapters
+  build payloads by hand, so a renamed or dropped field fails here instead of
+  surfacing as a 400 in production.
+- **lint** — `ruff check` (with inline PR annotations) and `ruff format --check`.
 
 ## License
 
