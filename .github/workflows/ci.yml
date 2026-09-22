@@ -99,8 +99,11 @@ jobs:
           cache: pip
           cache-dependency-path: pyproject.toml
 
-      - name: Install ruff
-        run: pip install ruff
+      # Installs the dev extra rather than bare `ruff`, so the version is the
+      # one pinned in pyproject. Ruff's formatter output changes between minor
+      # releases; an unpinned install makes CI disagree with contributors.
+      - name: Install pinned ruff
+        run: pip install -e '.[dev]'
 
       - name: ruff check
         run: ruff check --output-format=github .
